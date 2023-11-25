@@ -23,19 +23,21 @@ async function createGame(gameName: string) {
 }
 
 async function editGame(gameId: number, gameName: string) {
-  const doesGameExist = await gamesRepository.getGameByName(gameName);
-  if (doesGameExist) throw conflictError('Game');
+  const doesIdExist = await gamesRepository.getGameById(gameId);
+  if (!doesIdExist) throw notFoundError('Game');
+
+  const isNameRepeated = await gamesRepository.getGameByName(gameName);
+  if (isNameRepeated) throw conflictError('Game');
 
   const game = await gamesRepository.editGame(gameId, gameName);
-
-  if (!game) throw notFoundError('Game');
   return game;
 }
 
 async function deleteGame(gameId: number) {
-  const game = await gamesRepository.deleteGame(gameId);
+  const doesIdExist = await gamesRepository.getGameById(gameId);
+  if (!doesIdExist) throw notFoundError('Game');
 
-  if (!game) throw notFoundError('Game');
+  const game = await gamesRepository.deleteGame(gameId);
   return game;
 }
 
