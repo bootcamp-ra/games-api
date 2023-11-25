@@ -14,6 +14,15 @@ async function getGameById(gameId: number) {
   return game;
 }
 
+async function getGameByName(gameName: string) {
+  const game = await prisma.game.findFirst({
+    where: {
+      name: gameName,
+    },
+  });
+  return game;
+}
+
 async function createGame(gameName: string) {
   const game = await prisma.game.create({
     data: {
@@ -47,6 +56,7 @@ async function deleteGame(gameId: number) {
 export const gamesRepository = {
   getGames,
   getGameById,
+  getGameByName,
   createGame,
   editGame,
   deleteGame,

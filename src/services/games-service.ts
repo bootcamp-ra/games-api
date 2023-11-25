@@ -1,3 +1,4 @@
+import { conflictError } from '@/errors/conflict-error';
 import { notFoundError } from '@/errors/not-found-error';
 import { gamesRepository } from '@/repositories/games-repository';
 
@@ -14,11 +15,17 @@ async function getGameById(gameId: number) {
 }
 
 async function createGame(gameName: string) {
+  const doesGameExist = await gamesRepository.getGameByName(gameName);
+  if (doesGameExist) throw conflictError('Game');
+
   const game = await gamesRepository.createGame(gameName);
   return game;
 }
 
 async function editGame(gameId: number, gameName: string) {
+  const doesGameExist = await gamesRepository.getGameByName(gameName);
+  if (doesGameExist) throw conflictError('Game');
+
   const game = await gamesRepository.editGame(gameId, gameName);
 
   if (!game) throw notFoundError('Game');

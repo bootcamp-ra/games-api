@@ -20,6 +20,10 @@ export default function errorHandlingMiddleware(
     return res.status(httpStatus.UNPROCESSABLE_ENTITY).send(error.message);
   }
 
+  if (error.name === 'conflictError') {
+    return res.status(httpStatus.CONFLICT).send(error.message);
+  }
+
   console.log(error);
   return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
 }
